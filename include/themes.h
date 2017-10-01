@@ -110,7 +110,9 @@ typedef struct theme
 
     theme_elems_t mainElems;
     theme_elems_t infoElems;
-
+	theme_elems_t mainElemsELM;
+    theme_elems_t infoElemsELM;
+	
     int gameCacheCount;
 
     theme_element_t *itemsList;
