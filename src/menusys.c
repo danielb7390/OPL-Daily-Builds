@@ -639,7 +639,8 @@ void menuRenderMain()
 {
     // selected_item can't be NULL here as we only allow to switch to "Main" rendering when there is at least one device activated
 	theme_element_t* elem = NULL;
-	if(selected_item->item->userdata && selected_item->item->userdata->mode == ELM_MODE){
+	item_list_t *list = selected_item->item->userdata;
+	if(list && list->mode == ELM_MODE){
 		elem = gTheme->mainElemsELM.first;
     }else{
         elem = gTheme->mainElems.first;
@@ -717,7 +718,8 @@ void menuRenderInfo()
 
     WaitSema(menuSemaId);
 	theme_element_t* elem = NULL;
-	if(selected_item->item->userdata && selected_item->item->userdata->mode == ELM_MODE){
+	item_list_t *list = selected_item->item->userdata;
+	if(list && list->mode == ELM_MODE){
 		elem = gTheme->infoElemsELM.first;
     }else{
         elem = gTheme->infoElems.first;
