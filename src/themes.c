@@ -1138,7 +1138,19 @@ static void thmLoad(const char *themePath)
     snprintf(path, sizeof(path), "info0");
     while (addGUIElem(themePath, themeConfig, newT, &newT->infoElems, NULL, path))
         snprintf(path, sizeof(path), "info%d", i++);
-
+    
+	//Special Main ELM page
+	i = 1;
+	snprintf(path, sizeof(path), "mainELM0");
+	while (addGUIElem(themePath, themeConfig, newT, &newT->mainElemsELM, NULL, path))
+		snprintf(path, sizeof(path), "mainELM%d", i++);
+	
+	//Special Info ELM page
+	i = 1;
+	snprintf(path, sizeof(path), "infoELM0");
+	while(addGUIElem(themePath, themeConfig, newT, &newT->infoElemsELM, NULL, path))
+		snprintf(path, sizeof(path), "infoELM%d", i++);
+	
     validateGUIElems(themePath, themeConfig, newT);
     configFree(themeConfig);
 
