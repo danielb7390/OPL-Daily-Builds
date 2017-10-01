@@ -811,7 +811,17 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
         backgroundElem->next = theme->mainElems.first;
         theme->mainElems.first = backgroundElem;
     }
-
+	if (!theme->mainElemsELM.first || (theme->mainElemsELM.first->type != ELEM_TYPE_BACKGROUND)) {
+        LOG("THEMES No valid background found for mainELM, add default BG_ART\n");
+        theme_element_t *backgroundElem = initBasic(themePath, themeConfig, theme, "bg", ELEM_TYPE_BACKGROUND, 0, 0, ALIGN_NONE, screenWidth, screenHeight, SCALING_NONE, gDefaultCol, theme->fonts[0]);
+        if (themePath)
+            initBackground(themePath, themeConfig, theme, backgroundElem, "bg", "BG", 1, "background");
+        else
+            initBackground(themePath, themeConfig, theme, backgroundElem, "bg", "BG", 1, NULL);
+        backgroundElem->next = theme->mainElemsELM.first;
+        theme->mainElemsELM.first = backgroundElem;
+    }
+	
     if (theme->infoElems.first) {
         if (theme->infoElems.first->type != ELEM_TYPE_BACKGROUND) {
             LOG("THEMES No valid background found for info, add default BG_ART\n");
@@ -822,6 +832,18 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
                 initBackground(themePath, themeConfig, theme, backgroundElem, "bg", "BG", 1, NULL);
             backgroundElem->next = theme->infoElems.first;
             theme->infoElems.first = backgroundElem;
+        }
+    }
+	if (theme->infoElemsELM.first) {
+        if (theme->infoElemsELM.first->type != ELEM_TYPE_BACKGROUND) {
+            LOG("THEMES No valid background found for info, add default BG_ART\n");
+            theme_element_t *backgroundElem = initBasic(themePath, themeConfig, theme, "bg", ELEM_TYPE_BACKGROUND, 0, 0, ALIGN_NONE, screenWidth, screenHeight, SCALING_NONE, gDefaultCol, theme->fonts[0]);
+            if (themePath)
+                initBackground(themePath, themeConfig, theme, backgroundElem, "bg", "BG", 1, "background");
+            else
+                initBackground(themePath, themeConfig, theme, backgroundElem, "bg", "BG", 1, NULL);
+            backgroundElem->next = theme->infoElemsELM.first;
+            theme->infoElemsELM.first = backgroundElem;
         }
     }
 
@@ -852,6 +874,33 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
         initItemsList(themePath, themeConfig, theme, theme->itemsList, "il", NULL);
         theme->itemsList->next = theme->mainElems.first->next; // Position the itemsList as second element (right after the Background)
         theme->mainElems.first->next = theme->itemsList;
+    }
+	if (theme->itemsListELM) {
+        items_list_t *itemsList = (items_list_t *)theme->itemsListELM->extended;
+        if (itemsList->decorator) {
+            // Second pass to find the decorator
+            theme_element_t *decoratorElem = theme->mainElemsELM.first;
+            while (decoratorElem) {
+                if (decoratorElem->type == ELEM_TYPE_GAME_IMAGE) {
+                    mutable_image_t *gameImage = (mutable_image_t *)decoratorElem->extended;
+                    if (!strcmp(itemsList->decorator, gameImage->cache->suffix)) {
+                        // if user want to cache less than displayed items, then disable itemslist icons, if not would load constantly
+                        if (gameImage->cache->count >= itemsList->displayedItems)
+                            itemsList->decoratorImage = gameImage;
+                        break;
+                    }
+                }
+
+                decoratorElem = decoratorElem->next;
+            }
+            itemsList->decorator = NULL;
+        }
+    } else {
+        LOG("THEMES No itemsList found in ELM page, adding a default one\n");
+        theme->itemsListELM = initBasic(themePath, themeConfig, theme, "il", ELEM_TYPE_ITEMS_LIST, 150, MENU_POS_V, ALIGN_NONE, DIM_UNDEF, DIM_UNDEF, SCALING_RATIO, theme->textColor, theme->fonts[0]);
+        initItemsList(themePath, themeConfig, theme, theme->itemsListELM, "il", NULL);
+        theme->itemsListELM->next = theme->mainElemsELM.first->next; // Position the itemsListELM as second element (right after the Background)
+        theme->mainElemsELM.first->next = theme->itemsListELM;
     }
 }
 
@@ -899,7 +948,11 @@ static int addGUIElem(const char *themePath, config_set_t *themeConfig, theme_t 
                     elem = initBasic(themePath, themeConfig, theme, name, ELEM_TYPE_ITEMS_LIST, 150, MENU_POS_V, ALIGN_NONE, DIM_UNDEF, DIM_UNDEF, SCALING_RATIO, theme->textColor, theme->fonts[0]);
                     initItemsList(themePath, themeConfig, theme, elem, name, NULL);
                     theme->itemsList = elem;
-                }
+                }else if (!theme->itemsListELM){
+					elem = initBasic(themePath, themeConfig, theme, name, ELEM_TYPE_ITEMS_LIST, 150, MENU_POS_V, ALIGN_NONE, DIM_UNDEF, DIM_UNDEF, SCALING_RATIO, theme->textColor, theme->fonts[0]);
+                    initItemsList(themePath, themeConfig, theme, elem, name, NULL);
+					theme->itemsListELM = elem;
+				}
             } else if (!strcmp(elementsType[ELEM_TYPE_ITEM_ICON], type)) {
                 elem = initBasic(themePath, themeConfig, theme, name, ELEM_TYPE_GAME_IMAGE, 80, theme->usedHeight >> 1, ALIGN_CENTER, DIM_UNDEF, DIM_UNDEF, SCALING_RATIO, gDefaultCol, theme->fonts[0]);
                 initGameImage(themePath, themeConfig, theme, elem, name, "ICO", 20, NULL, NULL);
@@ -1087,8 +1140,14 @@ static void thmLoad(const char *themePath)
     newT->mainElems.last = NULL;
     newT->infoElems.first = NULL;
     newT->infoElems.last = NULL;
+	newT->mainElemsELM.first = NULL;
+    newT->mainElemsELM.last = NULL;
+    newT->infoElemsELM.first = NULL;
+    newT->infoElemsELM.last = NULL;
     newT->gameCacheCount = 0;
+	newT->inElmPage = 0;
     newT->itemsList = NULL;
+	newT->itemsListELM = NULL;
     newT->loadingIcon = NULL;
     newT->loadingIconCount = LOAD7_ICON - LOAD0_ICON + 1;
 

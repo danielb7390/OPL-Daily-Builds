@@ -114,8 +114,10 @@ typedef struct theme
     theme_elems_t infoElemsELM;
 	
     int gameCacheCount;
-
+	int inElmPage;
+	
     theme_element_t *itemsList;
+	theme_element_t *itemsListELM;
     theme_element_t *loadingIcon;
     int loadingIconCount;
 

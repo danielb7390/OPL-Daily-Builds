@@ -642,8 +642,20 @@ void menuRenderMain()
 	item_list_t *list = selected_item->item->userdata;
 	if(list && gTheme->mainElemsELM.first && list->mode == ELM_MODE){
 		elem = gTheme->mainElemsELM.first;
+		if (gTheme->inElmPage == 0){//Switch to ELM
+			theme_element_t *tmp = gTheme->itemsListELM;
+			gTheme->itemsListELM = gTheme->itemsList;
+			gTheme->itemsList = tmp;
+		}
+		gTheme->inElmPage = 1;
     }else{
         elem = gTheme->mainElems.first;
+		if (gTheme->inElmPage == 1){//Switch to Normal
+			theme_element_t *tmp = gTheme->itemsListELM;
+			gTheme->itemsListELM = gTheme->itemsList;
+			gTheme->itemsList = tmp;
+		}
+		gTheme->inElmPage = 0;
     }
     
     while (elem) {
