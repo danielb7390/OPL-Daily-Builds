@@ -638,12 +638,11 @@ void menuHandleInputMenu()
 void menuRenderMain()
 {
     // selected_item can't be NULL here as we only allow to switch to "Main" rendering when there is at least one device activated
-	theme_element_t* elem = NULL;
 	item_list_t *list = selected_item->item->userdata;
 	if(list && list->mode == ELM_MODE){
-		elem = gTheme->mainElemsELM.first;
+		theme_element_t* elem = gTheme->mainElemsELM.first;
     }else{
-        elem = gTheme->mainElems.first;
+        theme_element_t* elem = gTheme->mainElems.first;
     }
     
     while (elem) {
@@ -717,12 +716,12 @@ void menuRenderInfo()
     _menuRequestConfig();
 
     WaitSema(menuSemaId);
-	theme_element_t* elem = NULL;
+
 	item_list_t *list = selected_item->item->userdata;
 	if(list && list->mode == ELM_MODE){
-		elem = gTheme->infoElemsELM.first;
+		theme_element_t* elem = gTheme->infoElemsELM.first;
     }else{
-        elem = gTheme->infoElems.first;
+        theme_element_t* elem = gTheme->infoElems.first;
     }
     
     while (elem) {
