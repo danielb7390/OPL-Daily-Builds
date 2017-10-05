@@ -638,24 +638,24 @@ void menuHandleInputMenu()
 void menuRenderMain()
 {
     // selected_item can't be NULL here as we only allow to switch to "Main" rendering when there is at least one device activated
-	theme_element_t* elem = NULL;
-	item_list_t *list = selected_item->item->userdata;
-	if(list && gTheme->mainElemsELM.first && list->mode == ELM_MODE){
-		elem = gTheme->mainElemsELM.first;
-		if (gTheme->inElmPage == 0){//Switch to ELM
-			theme_element_t *tmp = gTheme->itemsListELM;
-			gTheme->itemsListELM = gTheme->itemsList;
-			gTheme->itemsList = tmp;
-		}
-		gTheme->inElmPage = 1;
+    theme_element_t* elem = NULL;
+    item_list_t *list = selected_item->item->userdata;
+    if(list && gTheme->mainElemsELM.first && list->mode == ELM_MODE){
+        elem = gTheme->mainElemsELM.first;
+        if (gTheme->inElmPage == 0){//Switch to ELM
+            theme_element_t *tmp = gTheme->itemsListELM;
+            gTheme->itemsListELM = gTheme->itemsList;
+            gTheme->itemsList = tmp;
+        }
+        gTheme->inElmPage = 1;
     }else{
         elem = gTheme->mainElems.first;
-		if (gTheme->inElmPage == 1){//Switch to Normal
-			theme_element_t *tmp = gTheme->itemsListELM;
-			gTheme->itemsListELM = gTheme->itemsList;
-			gTheme->itemsList = tmp;
-		}
-		gTheme->inElmPage = 0;
+        if (gTheme->inElmPage == 1){//Switch to Normal
+            theme_element_t *tmp = gTheme->itemsListELM;
+            gTheme->itemsListELM = gTheme->itemsList;
+            gTheme->itemsList = tmp;
+        }
+        gTheme->inElmPage = 0;
     }
     
     while (elem) {
@@ -729,10 +729,10 @@ void menuRenderInfo()
     _menuRequestConfig();
 
     WaitSema(menuSemaId);
-	theme_element_t* elem = NULL;
-	item_list_t *list = selected_item->item->userdata;
-	if(list && gTheme->infoElemsELM.first && list->mode == ELM_MODE){
-		elem = gTheme->infoElemsELM.first;
+    theme_element_t* elem = NULL;
+    item_list_t *list = selected_item->item->userdata;
+    if(list && gTheme->infoElemsELM.first && list->mode == ELM_MODE){
+        elem = gTheme->infoElemsELM.first;
     }else{
         elem = gTheme->infoElems.first;
     }
