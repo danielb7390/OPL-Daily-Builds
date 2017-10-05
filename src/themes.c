@@ -401,7 +401,10 @@ static mutable_image_t *initMutableImage(const char *themePath, config_set_t *th
 
     findDuplicate(theme->mainElems.first, cachePattern, defaultTexture, overlayTexture, mutableImage);
     findDuplicate(theme->infoElems.first, cachePattern, defaultTexture, overlayTexture, mutableImage);
-
+	
+	findDuplicate(theme->mainElemsELM.first, cachePattern, defaultTexture, overlayTexture, mutableImage);
+	findDuplicate(theme->infoElemsELM.first, cachePattern, defaultTexture, overlayTexture, mutableImage);
+	
     if (cachePattern && !mutableImage->cache) {
         if (type == ELEM_TYPE_ATTRIBUTE_IMAGE)
             mutableImage->cache = cacheInitCache(-1, themePath, 0, cachePattern, 1);
@@ -811,7 +814,7 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
         backgroundElem->next = theme->mainElems.first;
         theme->mainElems.first = backgroundElem;
     }
-	if (!theme->mainElemsELM.first || (theme->mainElemsELM.first->type != ELEM_TYPE_BACKGROUND)) {
+	if (theme->mainElemsELM.first != NULL && theme->mainElemsELM.first->type != ELEM_TYPE_BACKGROUND) {
         LOG("THEMES No valid background found for mainELM, add default BG_ART\n");
         theme_element_t *backgroundElem = initBasic(themePath, themeConfig, theme, "bg", ELEM_TYPE_BACKGROUND, 0, 0, ALIGN_NONE, screenWidth, screenHeight, SCALING_NONE, gDefaultCol, theme->fonts[0]);
         if (themePath)
@@ -895,7 +898,7 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
             }
             itemsList->decorator = NULL;
         }
-    } else {
+    } else if(theme->mainElemsELM.first){
         LOG("THEMES No itemsList found in ELM page, adding a default one\n");
         theme->itemsListELM = initBasic(themePath, themeConfig, theme, "il", ELEM_TYPE_ITEMS_LIST, 150, MENU_POS_V, ALIGN_NONE, DIM_UNDEF, DIM_UNDEF, SCALING_RATIO, theme->textColor, theme->fonts[0]);
         initItemsList(themePath, themeConfig, theme, theme->itemsListELM, "il", NULL);
