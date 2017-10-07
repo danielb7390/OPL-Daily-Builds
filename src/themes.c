@@ -402,11 +402,11 @@ static mutable_image_t *initMutableImage(const char *themePath, config_set_t *th
     findDuplicate(theme->mainElems.first, cachePattern, defaultTexture, overlayTexture, mutableImage);
     findDuplicate(theme->infoElems.first, cachePattern, defaultTexture, overlayTexture, mutableImage);
     
-	//START of OPL_DB tweaks
+    //START of OPL_DB tweaks
     findDuplicate(theme->mainElemsELM.first, cachePattern, defaultTexture, overlayTexture, mutableImage);
     findDuplicate(theme->infoElemsELM.first, cachePattern, defaultTexture, overlayTexture, mutableImage);
     //END of OPL_DB tweaks
-	
+    
     if (cachePattern && !mutableImage->cache) {
         if (type == ELEM_TYPE_ATTRIBUTE_IMAGE)
             mutableImage->cache = cacheInitCache(-1, themePath, 0, cachePattern, 1);
@@ -816,7 +816,7 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
         backgroundElem->next = theme->mainElems.first;
         theme->mainElems.first = backgroundElem;
     }
-	//START of OPL_DB tweaks
+    //START of OPL_DB tweaks
     if (theme->mainElemsELM.first != NULL && theme->mainElemsELM.first->type != ELEM_TYPE_BACKGROUND) {
         LOG("THEMES No valid background found for mainELM, add default BG_ART\n");
         theme_element_t *backgroundElem = initBasic(themePath, themeConfig, theme, "bg", ELEM_TYPE_BACKGROUND, 0, 0, ALIGN_NONE, screenWidth, screenHeight, SCALING_NONE, gDefaultCol, theme->fonts[0]);
@@ -827,7 +827,7 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
         backgroundElem->next = theme->mainElemsELM.first;
         theme->mainElemsELM.first = backgroundElem;
     }
-	//END of OPL_DB tweaks
+    //END of OPL_DB tweaks
 
     if (theme->infoElems.first) {
         if (theme->infoElems.first->type != ELEM_TYPE_BACKGROUND) {
@@ -855,7 +855,7 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
         }
     }
     //END of OPL_DB tweaks
-	
+    
     // 2. check we have a valid ItemsList element, and link its decorator to the target element
     if (theme->itemsList) {
         items_list_t *itemsList = (items_list_t *)theme->itemsList->extended;
@@ -884,7 +884,7 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
         theme->itemsList->next = theme->mainElems.first->next; // Position the itemsList as second element (right after the Background)
         theme->mainElems.first->next = theme->itemsList;
     }
-	//START of OPL_DB tweaks
+    //START of OPL_DB tweaks
     if (theme->itemsListELM) {
         items_list_t *itemsList = (items_list_t *)theme->itemsListELM->extended;
         if (itemsList->decorator) {
@@ -912,7 +912,7 @@ static void validateGUIElems(const char *themePath, config_set_t *themeConfig, t
         theme->itemsListELM->next = theme->mainElemsELM.first->next; // Position the itemsListELM as second element (right after the Background)
         theme->mainElemsELM.first->next = theme->itemsListELM;
     }
-	//END of OPL_DB tweaks
+    //END of OPL_DB tweaks
 }
 
 static int addGUIElem(const char *themePath, config_set_t *themeConfig, theme_t *theme, theme_elems_t *elems, const char *type, const char *name)
@@ -959,13 +959,13 @@ static int addGUIElem(const char *themePath, config_set_t *themeConfig, theme_t 
                     elem = initBasic(themePath, themeConfig, theme, name, ELEM_TYPE_ITEMS_LIST, 150, MENU_POS_V, ALIGN_NONE, DIM_UNDEF, DIM_UNDEF, SCALING_RATIO, theme->textColor, theme->fonts[0]);
                     initItemsList(themePath, themeConfig, theme, elem, name, NULL);
                     theme->itemsList = elem;
-				//START of OPL_DB tweaks
+                //START of OPL_DB tweaks
                 }else if (!theme->itemsListELM){
                     elem = initBasic(themePath, themeConfig, theme, name, ELEM_TYPE_ITEMS_LIST, 150, MENU_POS_V, ALIGN_NONE, DIM_UNDEF, DIM_UNDEF, SCALING_RATIO, theme->textColor, theme->fonts[0]);
                     initItemsList(themePath, themeConfig, theme, elem, name, NULL);
                     theme->itemsListELM = elem;
                 }
-				//END of OPL_DB tweaks
+                //END of OPL_DB tweaks
             } else if (!strcmp(elementsType[ELEM_TYPE_ITEM_ICON], type)) {
                 elem = initBasic(themePath, themeConfig, theme, name, ELEM_TYPE_GAME_IMAGE, 80, theme->usedHeight >> 1, ALIGN_CENTER, DIM_UNDEF, DIM_UNDEF, SCALING_RATIO, gDefaultCol, theme->fonts[0]);
                 initGameImage(themePath, themeConfig, theme, elem, name, "ICO", 20, NULL, NULL);
@@ -1153,14 +1153,14 @@ static void thmLoad(const char *themePath)
     newT->mainElems.last = NULL;
     newT->infoElems.first = NULL;
     newT->infoElems.last = NULL;
-	//START of OPL_DB tweaks
+    //START of OPL_DB tweaks
     newT->mainElemsELM.first = NULL;
     newT->mainElemsELM.last = NULL;
     newT->infoElemsELM.first = NULL;
     newT->infoElemsELM.last = NULL;
-	newT->inElmPage = 0;
-	newT->itemsListELM = NULL;
-	//END of OPL_DB tweaks
+    newT->inElmPage = 0;
+    newT->itemsListELM = NULL;
+    //END of OPL_DB tweaks
     newT->gameCacheCount = 0;
     newT->itemsList = NULL;
     newT->loadingIcon = NULL;
@@ -1213,7 +1213,7 @@ static void thmLoad(const char *themePath)
     while (addGUIElem(themePath, themeConfig, newT, &newT->infoElems, NULL, path))
         snprintf(path, sizeof(path), "info%d", i++);
     
-	//START of OPL_DB tweaks
+    //START of OPL_DB tweaks
     //Special Main ELM page
     i = 1;
     snprintf(path, sizeof(path), "mainELM0");
@@ -1226,8 +1226,8 @@ static void thmLoad(const char *themePath)
     while(addGUIElem(themePath, themeConfig, newT, &newT->infoElemsELM, NULL, path))
         snprintf(path, sizeof(path), "infoELM%d", i++);
     
-	//END of OPL_DB tweaks
-	
+    //END of OPL_DB tweaks
+    
     validateGUIElems(themePath, themeConfig, newT);
     configFree(themeConfig);
 
