@@ -638,7 +638,8 @@ void menuHandleInputMenu()
 void menuRenderMain()
 {
     // selected_item can't be NULL here as we only allow to switch to "Main" rendering when there is at least one device activated
-    theme_element_t* elem = NULL;
+    //START of OPL_DB tweaks
+	theme_element_t* elem = NULL;
     item_list_t *list = selected_item->item->userdata;
     if(list && gTheme->mainElemsELM.first && list->mode == ELM_MODE){
         elem = gTheme->mainElemsELM.first;
@@ -657,6 +658,7 @@ void menuRenderMain()
         }
         gTheme->inElmPage = 0;
     }
+	//END of OPL_DB tweaks
     
     while (elem) {
         if (elem->drawElem)
@@ -729,6 +731,7 @@ void menuRenderInfo()
     _menuRequestConfig();
 
     WaitSema(menuSemaId);
+	//START of OPL_DB tweaks
     theme_element_t* elem = NULL;
     item_list_t *list = selected_item->item->userdata;
     if(list && gTheme->infoElemsELM.first && list->mode == ELM_MODE){
@@ -736,6 +739,7 @@ void menuRenderInfo()
     }else{
         elem = gTheme->infoElems.first;
     }
+	//END of OPL_DB tweaks
     
     while (elem) {
         if (elem->drawElem)

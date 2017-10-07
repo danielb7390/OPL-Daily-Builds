@@ -110,14 +110,17 @@ typedef struct theme
 
     theme_elems_t mainElems;
     theme_elems_t infoElems;
+	
+	//START of OPL_DB tweaks
     theme_elems_t mainElemsELM;
     theme_elems_t infoElemsELM;
-    
+	int inElmPage;
+	theme_element_t *itemsListELM;
+    //END of OPL_DB tweaks
+	
     int gameCacheCount;
-    int inElmPage;
     
     theme_element_t *itemsList;
-    theme_element_t *itemsListELM;
     theme_element_t *loadingIcon;
     int loadingIconCount;
 
