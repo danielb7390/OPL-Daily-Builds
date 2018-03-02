@@ -893,6 +893,7 @@ int sysExecElf(char *path)
     return 0;
 }
 
+//START of OPL_DB tweaks
 int sysExecElfWithParam(char *path,char *param)
 {
     u8 *boot_elf = NULL;
@@ -938,6 +939,7 @@ int sysExecElfWithParam(char *path,char *param)
 
     return 0;
 }
+//END of OPL_DB tweaks
 
 int sysCheckMC(void)
 {

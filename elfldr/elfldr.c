@@ -13,9 +13,8 @@
 #include <loadfile.h>
 #include <string.h>
 #include <stdio.h>
-#include <sbv_patches.h>
-#include <iopheap.h>
 
+//START of OPL_DB tweaks
 // ELF-loading stuff
 #define ELF_MAGIC 0x464c457f
 #define ELF_PT_LOAD 1
@@ -51,6 +50,7 @@ typedef struct
     u32 flags;
     u32 align;
 } elf_pheader_t;
+//END of OPL_DB tweaks
 
 static inline void BootError(char *filename)
 {
@@ -74,7 +74,7 @@ static inline void InitializeUserMemory(unsigned int start, unsigned int end)
     }
 }
 
-
+//START of OPL_DB tweaks
 unsigned int _strtoui(const char *p)
 {
     if (!p)
@@ -189,11 +189,12 @@ void RunLoaderElf(char *filename,u8 *pElf)
     argv[0] = filename;
     ExecPS2((void *)eh->entry, 0, 1, argv);
 }
-
+//END of OPL_DB tweaks
 
 
 int main(int argc, char *argv[])
 {
+	//START of OPL_DB tweaks
 	if(argc>0 && (argv[0][0]=='m')
 			&& (argv[0][1]=='e')
 			&& (argv[0][2]=='m')
@@ -205,6 +206,7 @@ int main(int argc, char *argv[])
 		BootError(argv[0]);	
 		return 0;
 	}
+	//END of OPL_DB tweaks
 	
     int result;
     t_ExecData exd;
