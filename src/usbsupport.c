@@ -75,9 +75,9 @@ int usbFindPartition(char *target, char *name)
                 sprintf(target, "mass%d:%s/", i, gUSBPrefix);
             else
                 sprintf(target, "mass%d:", i);
-			//START of OPL_DB tweaks
+            //START of OPL_DB tweaks
             sprintf(usbBase,"mass%d:",i);
-			//END of OPL_DB tweaks
+            //END of OPL_DB tweaks
             fileXioClose(fd);
             return 1;
         }
@@ -88,9 +88,9 @@ int usbFindPartition(char *target, char *name)
         sprintf(target, "mass0:%s/", gUSBPrefix);
     else
         sprintf(target, "mass0:");
-		//START of OPL_DB tweaks
+        //START of OPL_DB tweaks
         sprintf(usbBase, "mass0:");
-		//END of OPL_DB tweaks
+        //END of OPL_DB tweaks
     return 0;
 }
 
