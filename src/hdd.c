@@ -140,10 +140,10 @@ struct GameDataEntry
 static int hddGetHDLGameInfo(struct GameDataEntry *game, hdl_game_info_t *ginfo)
 {
     int ret;
-
+		
     ret = hddReadSectors(game->lba, 2, IOBuffer);
     if (ret == 0) {
-
+		
         hdl_apa_header *hdl_header = (hdl_apa_header *)IOBuffer;
 
         strncpy(ginfo->partition_name, game->id, APA_IDMAX);
@@ -157,7 +157,7 @@ static int hddGetHDLGameInfo(struct GameDataEntry *game, hdl_game_info_t *ginfo)
         ginfo->layer_break = hdl_header->layer1_start;
         ginfo->disctype = hdl_header->discType;
         ginfo->start_sector = game->lba;
-        ginfo->total_size_in_kb = game->size / 2; //size * 2048 / 1024 = 0.5x
+        ginfo->total_size_in_kb = game->size;
     } else
         ret = -1;
 
@@ -184,7 +184,7 @@ int hddGetHDLGamelist(hdl_games_list_t *game_list)
     unsigned int count, i;
     iox_dirent_t dirent;
     int fd, ret;
-
+	
     hddFreeHDLGamelist(game_list);
 
     ret = 0;
@@ -206,7 +206,7 @@ int hddGetHDLGamelist(hdl_games_list_t *game_list)
                     strncpy(current->id, dirent.name, APA_IDMAX);
                     count++;
                     current->next = NULL;
-                    current->size = 0;
+					current->size = 0;                   
                     current->lba = 0;
                     pGameEntry = current;
                 }
@@ -215,8 +215,7 @@ int hddGetHDLGamelist(hdl_games_list_t *game_list)
                     // Note: The APA specification states that there is a 4KB area used for storing the partition's information, before the extended attribute area.
                     pGameEntry->lba = dirent.stat.private_5 + (HDL_GAME_DATA_OFFSET + 4096) / 512;
                 }
-
-                pGameEntry->size += (dirent.stat.size / 4); //size in sectors * (512 / 2048)
+                pGameEntry->size += (dirent.stat.size / 2); //size in sectors * (512 / 1024) KB
             }
         }
 
